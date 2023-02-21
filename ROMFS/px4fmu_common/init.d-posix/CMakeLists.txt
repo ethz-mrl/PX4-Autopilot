@@ -38,5 +38,6 @@ px4_add_romfs_files(
 	px4-rc.params
 	px4-rc.simulator
 	rc.replay
+	rc.sim
 	rcS
 )
