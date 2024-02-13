@@ -173,12 +173,26 @@ set(config_module_list)
 set(config_kernel_list)
 
 # Find Python
-find_package(PythonInterp 3)
-# We have a custom error message to tell users how to install python3.
-if(NOT PYTHONINTERP_FOUND)
-	message(FATAL_ERROR "Python 3 not found. Please install Python 3:\n"
-		"    Ubuntu: sudo apt install python3 python3-dev python3-pip\n"
-		"    macOS: brew install python")
+# If using catkin, Python 2 is found since it points
+# to the Python libs installed with the ROS distro
+if (NOT CATKIN_DEVEL_PREFIX)
+	find_package(PythonInterp 3)
+	# We have a custom error message to tell users how to install python3.
+	if (NOT PYTHONINTERP_FOUND)
+		message(FATAL_ERROR "Python 3 not found. Please install Python 3:\n"
+			"    Ubuntu: sudo apt install python3 python3-dev python3-pip\n"
+			"    macOS: brew install python")
+	endif()
+else()
+	# We want to use python3 in ROS noetic so that kconfiglib is found
+	# correctly. PythonInterp only finds python2 (used in older ROS
+	# versions).
+	if($ENV{ROS_DISTRO} STREQUAL "noetic")
+		find_package(Python3 REQUIRED COMPONENTS Interpreter)
+		set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
+	else()
+		find_package(PythonInterp REQUIRED)
+	endif()
 endif()
 
 option(PYTHON_COVERAGE "Python code coverage" OFF)
