@@ -146,39 +146,7 @@ if [[ $INSTALL_NUTTX == "true" ]]; then
 		util-linux \
 		vim-common \
 		;
-	if [[ "${UBUNTU_RELEASE}" == "20.04" ]]; then
-		sudo apt-get -y --quiet --no-install-recommends install \
-			kconfig-frontends \
-		;
-	fi
-
-	# arm-none-eabi-gcc
-	NUTTX_GCC_VERSION="9-2020-q2-update"
-	NUTTX_GCC_VERSION_SHORT="9-2020q2"
-
-	source $HOME/.profile # load changed path for the case the script is reran before relogin
-	if [ $(which arm-none-eabi-gcc) ]; then
-		GCC_VER_STR=$(arm-none-eabi-gcc --version)
-		GCC_FOUND_VER=$(echo $GCC_VER_STR | grep -c "${NUTTX_GCC_VERSION}")
-	fi
-
-	if [[ "$GCC_FOUND_VER" == "1" ]]; then
-		echo "arm-none-eabi-gcc-${NUTTX_GCC_VERSION} found, skipping installation"
-
-	else
-		echo "Installing arm-none-eabi-gcc-${NUTTX_GCC_VERSION}";
-		wget -O /tmp/gcc-arm-none-eabi-${NUTTX_GCC_VERSION}-linux.tar.bz2 https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu-rm/${NUTTX_GCC_VERSION_SHORT}/gcc-arm-none-eabi-${NUTTX_GCC_VERSION}-${INSTALL_ARCH}-linux.tar.bz2 && \
-			tar -jxf /tmp/gcc-arm-none-eabi-${NUTTX_GCC_VERSION}-linux.tar.bz2 -C ~/.local/opt/;
-
-		# add arm-none-eabi-gcc to user's PATH
-		exportline="export PATH=~/.local/opt/gcc-arm-none-eabi-${NUTTX_GCC_VERSION}/bin:\$PATH"
-
-		if grep -Fxq "$exportline" $HOME/.profile; then
-			echo "${NUTTX_GCC_VERSION} path already set.";
-		else
-			echo $exportline >> $HOME/.profile;
-		fi
-	fi
+	
 fi
 
 # Simulation tools
@@ -192,32 +160,39 @@ if [[ $INSTALL_SIM == "true" ]]; then
 		bc \
 		;
 
-	if [[ "${UBUNTU_RELEASE}" == "18.04" ]]; then
-		java_version=11
-		gazebo_version=9
-	elif [[ "${UBUNTU_RELEASE}" == "20.04" ]]; then
-		java_version=13
-		gazebo_version=11
+	# Gazebo / Gazebo classic installation
+	if [[ "${UBUNTU_RELEASE}" == "18.04" || "${UBUNTU_RELEASE}" == "20.04" ]]; then
+		sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'
+		wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
+		# Update list, since new gazebo-stable.list has been added
+		sudo apt-get update -y --quiet
+
+		# Install Gazebo classic
+		if [[ "${UBUNTU_RELEASE}" == "18.04" ]]; then
+			gazebo_classic_version=9
+			gazebo_packages="gazebo$gazebo_classic_version libgazebo$gazebo_classic_version-dev"
+		else
+			# default and Ubuntu 20.04
+			gazebo_classic_version=11
+			gazebo_packages="gazebo$gazebo_classic_version libgazebo$gazebo_classic_version-dev"
+		fi
 	else
-		java_version=14
-		gazebo_version=11
+		# Expects Ubuntu 22.04 > by default
+		echo "Gazebo (Harmonic) will be installed"
+		echo "Earlier versions will be removed"
+		# Add Gazebo binary repository
+		sudo wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg
+		echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null
+		sudo apt-get update -y --quiet
+
+		# Install Gazebo
+		gazebo_packages="gz-harmonic libunwind-dev"
+
+		if [[ "${UBUNTU_RELEASE}" == "24.04" ]]; then
+			gazebo_packages="$gazebo_packages cppzmq-dev"
+		fi
 	fi
-	# Java (jmavsim or fastrtps)
-	sudo apt-get -y --quiet --no-install-recommends install \
-		ant \
-		openjdk-$java_version-jre \
-		openjdk-$java_version-jdk \
-		libvecmath-java \
-		;
 
-	# Set Java 11 as default
-	sudo update-alternatives --set java $(update-alternatives --list java | grep "java-$java_version")
-
-	# Gazebo
-	sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'
-	wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
-	# Update list, since new gazebo-stable.list has been added
-	sudo apt-get update -y --quiet
 	sudo apt-get -y --quiet --no-install-recommends install \
 		dmidecode \
 		$gazebo_packages \

@@ -38,6 +38,10 @@ px4_add_romfs_files(
 	18001_TF-B1
 
 	# [22000, 22999] Reserve for custom models
+	# SRL MAVs
+	22000_dji_s500_srl
+	22001_dji_s550_srl
+	22010_rmf_owl
 )
 
 if(CONFIG_MODULES_SIMULATION_PWM_OUT_SIM)
@@ -98,30 +102,79 @@ if(CONFIG_MODULES_MC_RATE_CONTROL)
 		# [14000, 14999] MC with tilt
 		14001_generic_mc_with_tilt
 
-	16001_helicopter
+		16001_helicopter
 
-	# [17000, 17999] Autogyro
-	17002_TF-AutoG2
-	17003_TF-G2
+		24001_dodeca_cox
+	)
+endif()
 
-	# [18000, 18999] High-altitude balloons
-	18001_TF-B1
+if(CONFIG_MODULES_FW_RATE_CONTROL)
+	px4_add_romfs_files(
+		# [2000, 2999] Standard planes
+		2100_standard_plane
+		2106_albatross
 
-	# [22000, 22999] Reserve for custom models
+		# [3000, 3999] Flying wing
+		3000_generic_wing
 
-	24001_dodeca_cox
+		# [17000, 17999] Autogyro
+		17002_TF-AutoG2
+		17003_TF-G2
+	)
+endif()
 
-	50000_generic_ground_vehicle
-	50003_aion_robotics_r1_rover
-	50004_nxpcup_car_dfrobot_gpx
+if(CONFIG_MODULES_AIRSHIP_ATT_CONTROL)
+	px4_add_romfs_files(
+		2507_cloudship
+	)
+endif()
 
-	# [60000, 61000] (Unmanned) Underwater Robots
-	60000_uuv_generic
-	60001_uuv_hippocampus
-	60002_uuv_bluerov2_heavy
+if(CONFIG_MODULES_VTOL_ATT_CONTROL)
+	px4_add_romfs_files(
+		# [13000, 13999] VTOL
+		13000_generic_vtol_standard
+		13100_generic_vtol_tiltrotor
+		13030_generic_vtol_quad_tiltrotor
+		13200_generic_vtol_tailsitter
+	)
+endif()
 
-	# SRL MAVs
-	4114_dji_s500_srl
-	4115_dji_s550_srl
-	4120_rmf_owl
-)
+if(CONFIG_MODULES_ROVER_DIFFERENTIAL)
+	px4_add_romfs_files(
+		# [50000, 50999] Differential rovers
+		50000_generic_rover_differential
+		50001_aion_robotics_r1_rover
+	)
+endif()
+
+if(CONFIG_MODULES_ROVER_ACKERMANN)
+	px4_add_romfs_files(
+		# [51000, 51999] Ackermann rovers
+		51000_generic_rover_ackermann
+		51001_axial_scx10_2_trail_honcho
+	)
+endif()
+
+if(CONFIG_MODULES_ROVER_MECANUM)
+	px4_add_romfs_files(
+		# [52000, 52999] Mecanum rovers
+		52000_generic_rover_mecanum
+	)
+endif()
+
+if(CONFIG_MODULES_ROVER_POS_CONTROL)
+	px4_add_romfs_files(
+		# [59000, 59999] Rover position control (deprecated)
+		59000_generic_ground_vehicle
+		59001_nxpcup_car_dfrobot_gpx
+	)
+endif()
+
+if(CONFIG_MODULES_UUV_ATT_CONTROL)
+	px4_add_romfs_files(
+		# [60000, 61000] (Unmanned) Underwater Robots
+		60000_uuv_generic
+		60001_uuv_hippocampus
+		60002_uuv_bluerov2_heavy
+	)
+endif()

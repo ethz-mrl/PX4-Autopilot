@@ -1,9 +1,9 @@
 #!/bin/sh
 #
-# @name DJI S500 SRL simulation
+# @name RMF-Owl
 #
 # @type Quadrotor x
 # @class Copter
 
-. "${R}etc/init.d/airframes/4114_dji_s500_srl"
+. "${R}etc/init.d/airframes/22010_rmf_owl"
 . "${R}etc/init.d-posix/rc.sim"
