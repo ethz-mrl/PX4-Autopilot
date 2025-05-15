@@ -46,6 +46,7 @@ if [ "$PX4_SIMULATOR" = "sihsim" ] || [ "$(param show -q SYS_AUTOSTART)" -eq "0"
 		exit 1
 	fi
 
+
 elif [ "$PX4_SIMULATOR" = "gz" ] || [ "$(param show -q SIM_GZ_EN)" = "1" ]; then
 	# Use Gazebo
 
@@ -246,7 +247,6 @@ elif [ "$PX4_SIM_MODEL" = "jmavsim_iris" ] || [ "$(param show -q SYS_AUTOSTART)"
 
 else
 	# otherwise start simulator (mavlink) module
-
 	# EKF2 specifics
 	param set-default EKF2_GPS_DELAY 10
 	param set-default EKF2_MULTI_IMU 3
@@ -261,15 +261,15 @@ else
 
 		if [ -z "${PX4_SIM_HOST_ADDR}" ]; then
 			echo "INFO  [init] PX4_SIM_HOSTNAME: localhost"
-			simulator_mavlink start -c $simulator_tcp_port
+			simulator_mavlink start -c $simulator_tcp_port &
 		else
 			echo "INFO  [init] PX4_SIM_HOSTNAME: ${PX4_SIM_HOST_ADDR}"
-			simulator_mavlink start -t "${PX4_SIM_HOST_ADDR}" "${simulator_tcp_port}"
+			simulator_mavlink start -t "${PX4_SIM_HOST_ADDR}" "${simulator_tcp_port}" &
 		fi
 
 	else
 		echo "INFO  [init] PX4_SIM_HOSTNAME: ${PX4_SIM_HOSTNAME}"
-		simulator_mavlink start -h "${PX4_SIM_HOSTNAME}" "${simulator_tcp_port}"
+		simulator_mavlink start -h "${PX4_SIM_HOSTNAME}" "${simulator_tcp_port}" &
 	fi
 
 fi

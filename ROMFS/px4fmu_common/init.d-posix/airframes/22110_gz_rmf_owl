@@ -7,3 +7,5 @@
 
 . "${R}etc/init.d/airframes/22010_rmf_owl"
 . "${R}etc/init.d-posix/rc.sim"
+
+param set-default SYS_HITL 1
