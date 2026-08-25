@@ -128,6 +128,15 @@ else()
 	)
 	add_custom_target(topic_bridge_files DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/dds_topics.h)
 
+	# dds_topics.h is listed under SRCS below, so it lands in all_px4_src_files and
+	# src/lib/events depends on it when generating events/px4.json. That is a
+	# file-level dependency on a custom command output from another directory,
+	# which the Makefile generator cannot resolve on its own -- a clean build fails
+	# with "No rule to make target .../dds_topics.h, needed by events/px4.json".
+	# events/px4.json already depends on prebuild_targets to "ensure all generated
+	# source files exist", so make the generation part of it.
+	add_dependencies(prebuild_targets topic_bridge_files)
+
 	px4_add_module(
 		MODULE modules__uxrce_dds_client
 		MAIN uxrce_dds_client
