@@ -9,6 +9,9 @@ tetli_control start
 # SITL: the emulated Kahuna (gz TetliMocap plugin) sends ODOMETRY here and answers TIMESYNC.
 if [ "$PX4_SIMULATOR" = "gz" ]
 then
+	# The SITL logger polls on ekf2_timestamps, i.e. runs at the IMU integration rate, which
+	# px4-rc.simulator sets after the airframe. gz IMU timing jitter costs some samples at 400.
+	param set-default IMU_INTEG_RATE 500
 	mavlink start -x -u 14680 -o 14681 -t 127.0.0.1 -m minimal -r 200000
 	mavlink stream -u 14680 -s TIMESYNC -r 20
 fi
