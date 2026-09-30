@@ -45,6 +45,8 @@ px4_add_romfs_files(
 	rc.balloon_apps
 	rc.balloon_defaults
 	rc.sysinit
+	rc.tetli_apps
+	rc.tetli_defaults
 )
 
 if(CONFIG_MODULES_AIRSHIP_ATT_CONTROL)

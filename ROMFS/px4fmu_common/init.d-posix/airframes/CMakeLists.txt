@@ -120,4 +120,7 @@ px4_add_romfs_files(
 	70000_gz_atmos
 
 	# [22000, 22999] Reserve for custom models
+	22700_gz_tetli_fp
+	22701_gz_tetli_fp_matched
+	22702_gz_tetli_vp
 )

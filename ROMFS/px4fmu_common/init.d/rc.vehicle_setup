@@ -24,6 +24,14 @@ then
 fi
 
 #
+# tetli setup: its own controller and allocator (tetli repo).
+#
+if [ $VEHICLE_TYPE = tetli ]
+then
+	. ${R}etc/init.d/rc.tetli_apps
+fi
+
+#
 # UGV setup.
 #
 if [ $VEHICLE_TYPE = rover ]
