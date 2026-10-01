@@ -16,7 +16,6 @@ PX4_SIM_MODEL=${PX4_SIM_MODEL:=tetli_vp}
 param set-default SIM_GZ_EN 1
 param set-default TL_VEHICLE 2
 param set-default TL_KATT 20
-param set-default TL_SWP_AXES 4
 
 # Six blade-pitch servos: gz_bridge servo_i carries the commanded pitch in rad.
 param set-default SIM_GZ_SV_FUNC1 201
