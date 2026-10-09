@@ -1,0 +1,20 @@
+#!/bin/sh
+#
+# tetli build of the Pixracer Pro (mro_pixracerpro_tetli), before the airframe is chosen.
+#
+# tetli's fixed-pitch airframe unless the parameters choose another. Without an SD card no
+# parameter persists, so the board then starts as FP in HITL: SYS_HITL = 1 takes the sensors
+# from the simulator and drives no real output.
+#
+param set-default SYS_AUTOSTART 22700
+if [ $STORAGE_AVAILABLE = no ]
+then
+	param set-default SYS_HITL 1
+fi
+
+# HITL runs over USB, where PX4 caps MAVLink at 100 kB/s: the lean normal mode leaves that to the
+# HIL actuator stream, which the gz bridge asks for at every MAVLink loop.
+if param greater SYS_HITL 0
+then
+	param set-default USB_MAV_MODE 0
+fi
