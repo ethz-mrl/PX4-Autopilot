@@ -10,6 +10,7 @@ param set-default SYS_AUTOSTART 22700
 if [ $STORAGE_AVAILABLE = no ]
 then
 	param set-default SYS_HITL 1
+	param set-default SYS_DM_BACKEND 1   # the navigator's storage in RAM
 fi
 
 # HITL runs over USB, where PX4 caps MAVLink at 100 kB/s: the lean normal mode leaves that to the
