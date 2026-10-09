@@ -11,10 +11,6 @@ set VEHICLE_TYPE tetli
 param set-default MAV_TYPE 13
 param set-default IMU_GYRO_RATEMAX 400
 
-# tetli_control's topics are logged every cycle (400 Hz). The logger reads one message per topic
-# and loop, so it loops at 500 Hz (SITL: see rc.tetli_apps).
-set LOGGER_ARGS "${LOGGER_ARGS} -r 500"
-
 # EKF2 on mocap: horizontal + vertical position and yaw, vision height, baro as secondary.
 # The mocap link stamps CAPTURE times (time-synced), so no extra delay is assumed.
 param set-default EKF2_EV_CTRL 11
