@@ -1,0 +1,30 @@
+#!/bin/sh
+#
+# @name tetli, variable pitch
+#
+# @type Custom
+# @class Copter
+#
+# The tetli repo's vehicle (configs/vehicle/tetli.yaml there) on the Pixracer Pro. The real
+# outputs are configured in H0; until then only HITL (SYS_HITL = 1) drives the rotors.
+#
+
+. ${R}etc/init.d/rc.tetli_defaults
+
+param set-default TL_VEHICLE 2
+param set-default TL_KATT 20
+
+# HITL: six blade-pitch servos on HIL outputs 1-6 (-1..1 = -..+ pitch limit), the six
+# constant-speed motors on 7-12 (0..1 = stopped..nominal rpm).
+param set-default HIL_ACT_FUNC1 201
+param set-default HIL_ACT_FUNC2 202
+param set-default HIL_ACT_FUNC3 203
+param set-default HIL_ACT_FUNC4 204
+param set-default HIL_ACT_FUNC5 205
+param set-default HIL_ACT_FUNC6 206
+param set-default HIL_ACT_FUNC7 101
+param set-default HIL_ACT_FUNC8 102
+param set-default HIL_ACT_FUNC9 103
+param set-default HIL_ACT_FUNC10 104
+param set-default HIL_ACT_FUNC11 105
+param set-default HIL_ACT_FUNC12 106

@@ -40,6 +40,15 @@ px4_add_romfs_files(
 	# [22000, 22999] Reserve for custom models
 )
 
+# [22700, 22702] tetli, only in its own board build (mro_pixracerpro_tetli)
+if("${PX4_BOARD_LABEL}" STREQUAL "tetli")
+	px4_add_romfs_files(
+		22700_tetli_fp
+		22701_tetli_fp_matched
+		22702_tetli_vp
+	)
+endif()
+
 if(CONFIG_MODULES_SIMULATION_PWM_OUT_SIM)
 	px4_add_romfs_files(
 		# [1000, 1999] Simulation setups

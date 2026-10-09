@@ -15,9 +15,12 @@ then
 	mavlink start -x -u 14680 -o 14681 -t 127.0.0.1 -m minimal -r 200000
 	mavlink stream -u 14680 -s TIMESYNC -r 20
 
-	# C3 (tetli_mpc) is built where its generated solvers and acados are (SITL, for now).
+	# C3 (tetli_mpc) is built where its generated solvers and acados are.
 	if command -v px4-tetli_mpc > /dev/null
 	then
 		tetli_mpc start
 	fi
+else
+	# The board build (mro_pixracerpro_tetli) carries C3 too.
+	tetli_mpc start
 fi
